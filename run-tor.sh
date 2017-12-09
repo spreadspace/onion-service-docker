@@ -7,12 +7,6 @@ for var in TOR_CONTROL_PW ONION_HOST ONION_PORT; do
     sed -i "s,{{ $var }},$val,g" /tmp/torrc
 done
 
-
-# If the onion service key already exists, displya the hostname
-if [ -f /var/lib/tor/onion_service/hostname ]; then
-    echo -n 'Onion service address: '
-    cat /var/lib/tor/onion_service/hostname
-fi
-
-
+/keygen.py
+touch /var/lib/tor/onion_service/onion_service_non_anonymous
 exec /usr/bin/tor -f /tmp/torrc --RunAsDaemon 0
