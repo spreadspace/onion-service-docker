@@ -31,6 +31,8 @@ if __name__ == '__main__':
     PRIV_KEY_PATH = os.path.join(OS_PATH, 'private_key')
     HOSTNAME_PATH = os.path.join(OS_PATH, 'hostname')
 
+    os.makedirs(OS_PATH, mode=0o700, exist_ok=True)
+
     if os.path.exists(PRIV_KEY_PATH):
         with open(PRIV_KEY_PATH, 'rb') as file:
             privkey = serialization.load_pem_private_key(
@@ -45,7 +47,7 @@ if __name__ == '__main__':
             file.write(privkey.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
-                encryption_algorithm=serialization.NoEncryption
+                encryption_algorithm=serialization.NoEncryption()
             ))
 
     hostname = onion_name(privkey)
