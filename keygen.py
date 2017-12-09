@@ -15,13 +15,13 @@ def onion_keygen():
 
 
 def onion_name(key):
-    bytes = key.public_key().public_bytes(
+    pub_bytes = key.public_key().public_bytes(
         encoding=serialization.Encoding.DER,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
+        format=serialization.PublicFormat.PKCS1
     )
     hash = Hash(SHA1(), backend=default_backend())
-    hash.update(bytes[-24:])
-    return base64.b32encode(hash.finalize()[:10]).lower()
+    hash.update(pub_bytes)
+    return base64.b32encode(hash.finalize()[:10]).lower() + b'.onion'
 
 OS_PATH = '/var/lib/tor/onion_service'
 PRIV_KEY_PATH = os.path.join(OS_PATH, 'private_key')
