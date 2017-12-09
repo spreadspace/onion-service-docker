@@ -1,0 +1,12 @@
+## Do not act as a SOCKS proxy
+SOCKSPort 0
+
+## Support Tor control port
+ControlPort 9051
+HashedControlPassword {{ TOR_CONTROL_PW }}
+
+## Publish a hidden service
+HiddenServiceDir /var/lib/tor/onion_service/
+HiddenServicePort {{ ONION_PORT }} {{ ONION_HOST }}:{{ ONION_PORT }}
+HiddenServiceNonAnonymousMode 1
+HiddenServiceSingleHopMode 1
