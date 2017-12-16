@@ -14,14 +14,17 @@ ENV TINI_VERSION v0.16.1
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static-muslc-amd64 /tini
 RUN chmod +x /tini
 
-USER debian-tor
+RUN adduser --home /srv --no-create-home --system --uid 999 --group app
+
 COPY "run-tor.sh" "/run-tor.sh"
 COPY "torrc"      "/torrc"
 COPY "keygen.py"  "/keygen.py"
 
 ENV TOR_DIR /var/lib/tor
 VOLUME ["${TOR_DIR}"]
-RUN mkdir -p ${TOR_DIR} && chown ${USER}:${USER} ${TOR_DIR}
+RUN mkdir -p ${TOR_DIR} && chown app:app ${TOR_DIR}
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/run-tor.sh"]
+
+USER app
