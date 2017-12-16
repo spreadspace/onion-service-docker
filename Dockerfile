@@ -14,7 +14,7 @@ ENV TINI_VERSION v0.16.1
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static-muslc-amd64 /tini
 RUN chmod +x /tini
 
-RUN adduser --home /srv --no-create-home --system --uid 999 --group app
+RUN adduser --home /srv --no-create-home --system --uid 998 --group app
 
 COPY "run-tor.sh" "/run-tor.sh"
 COPY "torrc"      "/torrc"
