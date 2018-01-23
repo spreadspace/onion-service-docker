@@ -1,0 +1,21 @@
+---
+env:
+  global:
+    # DOCKER_EMAIL
+    - secure: "NPo7pdmDi/hiQBjUeEjrGi5bmphTzUikXj8BGx1zM0Pzt6f1We4CZjdLtk3jDgmXWTjJfb7C7uYn5MEcWhqsyIspmyX/SinKeqXQejMvOCvOWnLGnJ5eTxIcd+chkurcrSFWGCslamb4LiDjwEVQYCcGAmHpCLebL0z84lkAYx7lZL4+3yDEBQyGhtwExDaknMl6s8MbfcaKZTkhTwvDYWur+3NOXKuHPv9KW3DhQ7DqWbGX82TuFhJRFMGXJcBckRNHU2YhXpopj35/Ep4bOLAaWiDoPBiRVOHXmgbSXOTybKJRk96dUCYojOJDAazTBWtQwwnb2UN+DH2iiMZDF+2jJkFooDwuXAZ0zJ9aW4lZGIC20u9vtZCk6HN76Zn+tUEsLlWwEN9xdxCRYpDm7R1A8fQfgXw59jB7NZz3C+m8iriYp5PAhIFGDJBlq2bF+FHI0AiScWeinghEHZYNr+EOEOxgtA6iN4m6KFVyT/a3zOjxXwdvcfyoKRhJzW3dP3TwNfl1FuYYJQtqEGYdP6YzTiR1FObN3ceM45O8SDsWi5pIgOoPY2oN4NBUamHWLauzjvdqwaRMNNX4Y1uCHXqy0gEqlUvzRr7qH4/OMG89Wb6nw5CkDtOIHmnLAML5/RqHfjggmQRySAw5ny6RNfncgee2LK35fB9ccuLbhX0="
+    # DOCKER_USER
+    - secure: "viQhXp8DaMdPIGDe+xrXpJ2OCqAhvRj8DyIxF8e10j8STCvO+gvOsAzltDLB0zpVlxMExGLuazkg2b7RyyJX69shSjIhpNrRTOQzjiRJZL3vdFdGm+5xER9/PVVAqVY3lcd8rK2K2ZFTUfSQnfhR2Yfty4RsQ159Yrl3Si56YNuGseGUzlozOH7r0miFN25hpgONFi3vMuXjKGvPFxqa5ROwW3+XHcMif90zT5KajLv7m5Fa1fgMDnXgbG5eeYX/63eQaDc4uAnQeiahso0CIV/n/0H5o85Y4ZSRdnjsuTZKrXWnESEjJaYtK4wPMUxpa3AIoWD8Zte9/Z4lPq2uFWz4arGTtk0So9boNxS7x/jkhGi7Lio7rRKl9anM4v1d0v5mySo1mOBcRF0xxChVSrF8JwbPqWOlYakqMe6cfqPRsn1k/5BqwgIWu9TKthiwDQ3EXMt7iXYqH1VbN2AlgoGA4oRLdPdvw6NLHVYDGEWuGA0KHo1muVxSpy2gADW9Um8kRHSunB8pHp00jgcjrsMfmaG/yqFv8IcW/YAom6D9FtyzxGBxZd91zhjBxfxJwtlYAvEbvGgQhbfzUvazXwBYsRdgHAtCehaGzFwBTkFDDBpagxqfoVt4PAskSam/jIXstBCDymLSdWxB2dbFB/CaCSRhxqMlMKmslqPCTiw="
+    # DOCKER_PASS
+    - secure: "qnBppoPYVrYwwkgb6PVIYbu6lbow7gY/HaBS8fdt4+6SHaZzDpI1GkX8dblfDJyrnhEDG9xMdoyHLBBgKlEv35bjWgnagBrQ1K93sfual1u7+a0tSHI+XkBccQ7b7IiVK58A/m4C9+GLPU9oEC8faURde2jndIcfyWGjo3Kqydu4Tarmw+HdT2c0kpD7mb0QAT4EsT7cSmc0caeSOy0c3/7q5cYFkReTfnOAUaRvMrhKQL9CHRB5OR1DK9TGX2nRr8eb8OsPw1EwQtUY4F4JUDvRF+5PI7zGScuGtLRLmbOUE6JkTSN1jhLxtThL/A6JF0zk2TWVZtCKj4AQ5I8on7LY3ka/ObnNzf/TJyzNssZz1Bek4Nf2/HKyN6jlTHarp89vOqLyBEXdjckEh3jWaddTuBRUG/b7F41kjqRwWrlbW1WVMM9t+uNKvm8wkAAcB0VgNQHRi0At/wffJC+8hmREhz6DfosUnr/86h5PFnl0+jQbN4Tns712BgJVEMfsjtB+N9eaxhT/miIKRabAsc3h4J5DToknLjjW9fpF3VHozbNCASJRtiDjPSbwvoPRCRAvDTZKkENuexMqc4QTAuweotRbCVwjyOmG2Tqu1r64WSEVOhyW3wHhp8hbq7uktLk47s9fssMYQz4O/qR1AGuLigVD365mvNidJjWRkRM="
+    - DOCKER_REPO=spreadspace/onion-service
+
+script:
+  ### pull current images to potentially use docker build cache
+  - docker pull $DOCKER_REPO:latest
+  ### build the new images
+  - docker build -t $DOCKER_REPO:latest .
+  - docker tag $DOCKER_REPO:latest $DOCKER_REPO:$TRAVIS_BUILD_NUMBER
+  ### push to docker-hub
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - docker push $DOCKER_REPO:$TRAVIS_BUILD_NUMBER
+  - docker push $DOCKER_REPO:latest
