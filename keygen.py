@@ -38,6 +38,7 @@ def annotate_self(onion_name):
             "spreadspace.org/onion_instance": onion_name
         }
     })
+    print('Pod annotation added.')
 
 
 if __name__ == '__main__':
