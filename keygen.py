@@ -26,6 +26,7 @@ def onion_name(key):
 
 
 def annotate_self(onion_name):
+    import os
     from kubernetes import client, config
     NAMESPACE = os.environ['POD_NAMESPACE']
     POD_NAME  = os.environ['POD_NAME']
