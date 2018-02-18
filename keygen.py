@@ -22,7 +22,7 @@ def onion_name(key):
     )
     hash = Hash(SHA1(), backend=default_backend())
     hash.update(pub_bytes)
-    return b32encode(hash.finalize()[:10]).lower() + b'.onion'
+    return b32encode(hash.finalize()[:10]).lower().decode('ascii') + '.onion'
 
 
 def annotate_self(onion_name):
@@ -66,9 +66,9 @@ if __name__ == '__main__':
 
     hostname = onion_name(privkey)
     if not os.path.exists(HOSTNAME_PATH):
-        with open(HOSTNAME_PATH, 'wb') as file:
+        with open(HOSTNAME_PATH, 'w') as file:
             file.write(hostname)
-            file.write(b'\n')
+            file.write('\n')
 
     print('Onion service address:', hostname)
 
