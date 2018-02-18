@@ -6,7 +6,8 @@ RUN set -x \
     && echo 'APT::Install-Suggests "false";' >> /etc/apt/apt.conf.d/02no-recommends \
     && apt-get update -q \
     && apt-get install -y -q -t stretch-backports tor \
-    && apt-get install -y -q python3-cryptography  \
+    && apt-get install -y -q python3-cryptography python3-pip \
+    && pip3 install kubernetes \
     && apt-get upgrade -y -q \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
