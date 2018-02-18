@@ -25,6 +25,20 @@ def onion_name(key):
     return b32encode(hash.finalize()[:10]).lower() + b'.onion'
 
 
+def annotate_self(onion_name):
+    from kubernetes import client, config
+    NAMESPACE = ''
+    POD_NAME  = ''
+
+    config.incluster_config.load_incluster_config()
+    v1 = client.CoreV1Api()
+    v1.proxy_get_namespaced_pod(POD_NAME, NAMESPACE, {
+        "annotations": {
+            "spreadspace.org/onion_instance": onion_name
+        }
+    })
+
+
 if __name__ == '__main__':
     import os
     OS_PATH = '/var/lib/tor/onion_service'
@@ -57,3 +71,7 @@ if __name__ == '__main__':
             file.write(b'\n')
 
     print('Onion service address:', hostname)
+
+    K8S_API_KEY_PATH='/var/run/secrets/kubernetes.io/serviceaccount'
+    if os.path.exists(K8S_API_KEY_PATH):
+        annotate_self(hostname)
