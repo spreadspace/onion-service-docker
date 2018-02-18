@@ -27,8 +27,8 @@ def onion_name(key):
 
 def annotate_self(onion_name):
     from kubernetes import client, config
-    NAMESPACE = ''
-    POD_NAME  = ''
+    NAMESPACE = os.environ['POD_NAMESPACE']
+    POD_NAME  = os.environ['POD_NAME']
 
     config.incluster_config.load_incluster_config()
     v1 = client.CoreV1Api()
