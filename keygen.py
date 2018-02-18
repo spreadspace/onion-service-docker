@@ -36,7 +36,7 @@ def annotate_self(onion_name):
     v1.patch_namespaced_pod(POD_NAME, NAMESPACE, {
         "metadata": {
             "annotations": {
-                "spreadspace.org/onion_instance": onion_name
+                "spreadspace.org/onion-instance": onion_name
             }
         }
     })
