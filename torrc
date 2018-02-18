@@ -1,3 +1,6 @@
+## Set DataDirectory
+DataDirectory /var/lib/tor
+
 ## Do not act as a SOCKS proxy
 SOCKSPort 0
 
