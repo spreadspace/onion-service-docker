@@ -32,7 +32,7 @@ def annotate_self(onion_name):
 
     config.incluster_config.load_incluster_config()
     v1 = client.CoreV1Api()
-    v1.proxy_get_namespaced_pod(POD_NAME, NAMESPACE, {
+    v1.patch_namespaced_pod(POD_NAME, NAMESPACE, {
         "annotations": {
             "spreadspace.org/onion_instance": onion_name
         }
