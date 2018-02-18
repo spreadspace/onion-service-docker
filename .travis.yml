@@ -1,7 +1,12 @@
 ---
+sudo: required
+services:
+  - docker
+
 branches:
   only:
     - master
+    - k8s
 
 env:
   global:
@@ -13,13 +18,23 @@ env:
     - secure: "lt1IYf5TNWSBaoohBnppzwbDzV8KRam0ZHBdBTzZ5zhuKBxjafB5H0YQsBdwet/NzloYytNlbKirRArIUYw1UuTN2Nty8q3tNyEMFZoOATPQhiAiHIuu61Lz8OBilbCyvYWkK78APuY/1OHeEa/o5xUUk+btBZcFHPrsd+MkCPXcLC5cNB08oLUK3KgBmPXhbd/3oB+eXfd8Q2ZLynbD1QgqDmeUT+nsFlhVEbBf7ZFt+KjUKr3F0VimTF8CdOPH04sNGgRPrMXUxayLVWeAkh1KYMV+K2gkWjkLOqh5WOgZ+dU+Pu7F/89Pzgl9kHdseddrFCttS4QTdF18sdAf//HnjC8WPLBH7S1h5cBWJo4Vei+QGfayDJLrYDnQu1Lj1gNo+k2DClyReX8EhOHN/nTBuIJ/7/axYWlyfzO8xd3WZDgaZsKhOwWd4mKAmHkTJjEyoR46JtJgOZOo99YeC8x3mvDjj8iNVF+AWf7HBAaHtI0mlpK35uh+8UO5ZeGXtUrB/OAV6Z1fecPVbqpoxQ8L/pCkNpe05zZVuY3f50nLg+TqqhZYmhDO7N9c3mT6vkZoekuDresBN+gt5BfxU89oKfhBwAtDA/jI08mS3SFnxXLXRjwTAaLzAn5ehe+9LzloheCWO9RzN0936XlHDZ/8BAPs+aqK9huLYjLQrkg="
     - DOCKER_REPO=spreadspace/onion-service
 
-script:
+before_script:
   ### pull current images to potentially use docker build cache
   - docker pull $DOCKER_REPO:latest
+
+script:
   ### build the new images
-  - docker build -t $DOCKER_REPO:latest .
-  - docker tag $DOCKER_REPO:latest $DOCKER_REPO:$TRAVIS_BUILD_NUMBER
+  - docker build -t $DOCKER_REPO:$TRAVIS_BUILD_NUMBER .
+
+after_success:
+  - >-
+    if [ "${TRAVIS_BRANCH}" = master ]; then
+      DOCKER_TAG="latest"
+    else
+      DOCKER_TAG="${TRAVIS_BRANCH}"
+    fi
+  - docker tag $DOCKER_REPO:$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$DOCKER_TAG
   ### push to docker-hub
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - docker push $DOCKER_REPO:$TRAVIS_BUILD_NUMBER
-  - docker push $DOCKER_REPO:latest
+  - docker push $DOCKER_REPO:$DOCKER_TAG
