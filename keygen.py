@@ -29,7 +29,7 @@ def annotate_self(onion_name):
     import os
     from kubernetes import client, config
     NAMESPACE = os.environ['POD_NAMESPACE']
-    POD_NAME = os.environ['POD_NAME']
+    POD_NAME  = os.environ['POD_NAME']
 
     config.incluster_config.load_incluster_config()
     v1 = client.CoreV1Api()
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     PRIV_KEY_PATH = os.path.join(OS_PATH, 'private_key')
     HOSTNAME_PATH = os.path.join(OS_PATH, 'hostname')
 
-    os.makedirs(OS_PATH, mode=0700, exist_ok=True)
+    os.makedirs(OS_PATH, mode=0o700, exist_ok=True)
 
     if os.path.exists(PRIV_KEY_PATH):
         with open(PRIV_KEY_PATH, 'rb') as file:
@@ -76,6 +76,6 @@ if __name__ == '__main__':
 
     print('Onion service address:', hostname)
 
-    K8S_API_KEY_PATH = '/var/run/secrets/kubernetes.io/serviceaccount'
+    K8S_API_KEY_PATH='/var/run/secrets/kubernetes.io/serviceaccount'
     if os.path.exists(K8S_API_KEY_PATH):
         annotate_self(hostname)
